@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>371 Economic Impact Analysis — Brainerd Lakes Area</title>
+  <meta name="description" content="Benefit-cost overview and interactive comparison of interchange alternatives for the Brainerd Lakes Area (MN 371 / Baxter)." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./styles.css" />
+
+  <!-- Charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="wrap topbar__inner">
+      <div class="brand">
+        <div class="brand__mark" aria-hidden="true"></div>
+        <div class="brand__text">
+          <div class="brand__title">Economic Impact Analysis</div>
+          <div class="brand__sub">MN 371 • Brainerd Lakes Area</div>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Primary">
+        <a href="#summary">Summary</a>
+        <a href="#alternatives">Alternatives</a>
+        <a href="#calculator">Calculator</a>
+        <a href="#methodology">Methodology</a>
+        <a href="#context">Context</a>
+      </nav>
+
+      <div class="topbar__actions">
+        <button id="printBtn" class="btn btn--ghost" type="button">Print / Save PDF</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero__content">
+        <div class="kicker">Brainerd Lakes Area Transportation Infrastructure Assessment</div>
+        <h1>371 Economic Impact Analysis <span class="accent">(Simple)</span></h1>
+        <p class="lede">
+          A simplified benefit-cost view of interchange alternatives, focused on travel time savings, safety benefits,
+          vehicle operating cost (VOC) reductions, and maintenance costs — with an emphasis on minimizing disruption to
+          businesses along Baxter’s main corridor (371).
+        </p>
+
+        <div class="meta">
+          <div class="pill">Date: <strong>June 10, 2025</strong></div>
+          <div class="pill">Discount Rate: <strong><span id="metaRate">4%</span></strong></div>
+          <div class="pill">Analysis: <strong><span id="metaYears">30</span> years</strong></div>
+        </div>
+      </div>
+
+      <div class="hero__cards" aria-label="Key metrics">
+        <div class="card">
+          <div class="card__label">Recommended (by total annual benefit)</div>
+          <div class="card__value" id="bestAlt">Diverging Diamond</div>
+          <div class="card__hint">Based on the dataset below</div>
+        </div>
+
+        <div class="card">
+          <div class="card__label">Total annual benefits (selected)</div>
+          <div class="card__value"><span id="annualBenefit">$—</span>M</div>
+          <div class="card__hint">Time + Safety + VOC − Maintenance</div>
+        </div>
+
+        <div class="card">
+          <div class="card__label">BCR (selected)</div>
+          <div class="card__value" id="bcrValue">—</div>
+          <div class="card__hint">NPV ÷ Construction Cost</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUMMARY -->
+    <section id="summary" class="section">
+      <div class="section__head">
+        <h2>Summary</h2>
+        <p class="muted">
+          This is a simplified screening tool. For a formal decision, confirm inputs with official traffic, safety,
+          engineering, and cost estimates.
+        </p>
+      </div>
+
+      <div class="grid2">
+        <div class="panel">
+          <h3>Economic Framework</h3>
+          <p>
+            We compare alternatives using a benefit-cost approach:
+          </p>
+          <div class="formula" role="note">
+            <strong>Benefit-Cost Ratio (BCR)</strong> = <span class="mono">NPV of Benefits</span> ÷ <span class="mono">Construction Cost</span>
+          </div>
+          <ul class="bullets">
+            <li>Travel time savings</li>
+            <li>Safety improvements</li>
+            <li>Vehicle operating cost (VOC) reductions</li>
+            <li>Maintenance costs (subtracted from benefits)</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <h3>What this site does</h3>
+          <ul class="bullets">
+            <li>Lets you sort and compare alternatives quickly</li>
+            <li>Calculates NPV + BCR given discount rate and time horizon</li>
+            <li>Shows a chart and highlights “best” by annual net benefit</li>
+          </ul>
+          <div class="callout">
+            Tip: Use <strong>Calculator</strong> to test sensitivity (2%, 4%, 6%, 8%) and see how rankings shift.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ALTERNATIVES -->
+    <section id="alternatives" class="section">
+      <div class="section__head">
+        <h2>Comparative Assessment</h2>
+        <p class="muted">Click column headers to sort. Click a row to select an alternative.</p>
+      </div>
+
+      <div class="grid2">
+        <div class="panel">
+          <div class="tableWrap" role="region" aria-label="Alternatives table" tabindex="0">
+            <table id="altTable">
+              <thead>
+                <tr>
+                  <th data-key="name">Alternative</th>
+                  <th data-key="time" class="num">Travel Time (M/yr)</th>
+                  <th data-key="safety" class="num">Safety (M/yr)</th>
+                  <th data-key="voc" class="num">VOC (M/yr)</th>
+                  <th data-key="maint" class="num">Maint (M/yr)</th>
+                  <th data-key="cost" class="num">Constr. Cost (M)</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <div class="legend">
+            <span class="dot dot--best"></span> best by annual net benefit
+            <span class="spacer"></span>
+            <span class="dot dot--selected"></span> selected
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="chartHead">
+            <h3>Annual Net Benefit (M/yr)</h3>
+            <p class="muted small">Time + Safety + VOC − Maintenance</p>
+          </div>
+          <div class="chartBox">
+            <canvas id="benefitChart" aria-label="Benefit chart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CALCULATOR -->
+    <section id="calculator" class="section">
+      <div class="section__head">
+        <h2>NPV + BCR Calculator</h2>
+        <p class="muted">
+          Adjust discount rate and analysis period. The results update for the selected alternative.
+        </p>
+      </div>
+
+      <div class="grid2">
+        <div class="panel">
+          <div class="formGrid">
+            <label>
+              Discount rate (r)
+              <input id="rate" type="number" step="0.1" min="0" max="20" value="4" />
+              <span class="hint">Try 2, 4, 6, 8</span>
+            </label>
+
+            <label>
+              Analysis period (years)
+              <input id="years" type="number" step="1" min="1" max="60" value="30" />
+              <span class="hint">Common: 20–40 years</span>
+            </label>
+          </div>
+
+          <div class="results">
+            <div class="result">
+              <div class="result__label">Selected Alternative</div>
+              <div class="result__value" id="selName">—</div>
+            </div>
+            <div class="result">
+              <div class="result__label">Annual Net Benefit</div>
+              <div class="result__value"><span id="selAnnual">—</span>M/yr</div>
+            </div>
+            <div class="result">
+              <div class="result__label">NPV (Benefits)</div>
+              <div class="result__value"><span id="selNPV">—</span>M</div>
+            </div>
+            <div class="result">
+              <div class="result__label">BCR</div>
+              <div class="result__value" id="selBCR">—</div>
+            </div>
+          </div>
+
+          <div class="formula" role="note">
+            <div><strong>NPV</strong> = Σ <span class="mono">AnnualNetBenefit</span> / (1 + r)<sup>t</sup></div>
+            <div><strong>BCR</strong> = <span class="mono">NPV</span> / <span class="mono">ConstructionCost</span></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Sensitivity shortcuts</h3>
+          <p class="muted">
+            Quick buttons to test discount rates. (We keep the analysis years the same.)
+          </p>
+          <div class="row">
+            <button class="btn btn--pill" data-rate="2" type="button">2%</button>
+            <button class="btn btn--pill" data-rate="4" type="button">4%</button>
+            <button class="btn btn--pill" data-rate="6" type="button">6%</button>
+            <button class="btn btn--pill" data-rate="8" type="button">8%</button>
+          </div>
+
+          <div class="callout">
+            If you’d like, we can add a second chart that shows <strong>BCR across rates</strong> for every alternative.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- METHODOLOGY -->
+    <section id="methodology" class="section">
+      <div class="section__head">
+        <h2>Methodology</h2>
+        <p class="muted">Clear definitions so your site reads like a professional report.</p>
+      </div>
+
+      <div class="panel prose">
+        <h3>Inputs</h3>
+        <ul>
+          <li>Annual travel time savings (M USD)</li>
+          <li>Annual safety benefits (M USD)</li>
+          <li>Annual vehicle operating cost (VOC) savings (M USD)</li>
+          <li>Annual maintenance cost (M USD) — treated as a negative benefit</li>
+          <li>Upfront construction cost (M USD)</li>
+        </ul>
+
+        <h3>NPV</h3>
+        <p>
+          We discount annual net benefits over the analysis period using the selected discount rate.
+          Construction cost is treated as an upfront cost (Year 0). This simplified calculator focuses on benefits-side NPV.
+        </p>
+
+        <h3>BCR interpretation</h3>
+        <ul>
+          <li><strong>BCR &gt; 1</strong>: benefits exceed costs (economically favorable)</li>
+          <li><strong>BCR &lt; 1</strong>: costs exceed benefits</li>
+          <li>Higher BCR generally indicates better economic efficiency</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- CONTEXT -->
+    <section id="context" class="section">
+      <div class="section__head">
+        <h2>Regional Economic Context</h2>
+        <p class="muted">A place to plug in ESRI demographics, business counts, or local economic indicators.</p>
+      </div>
+
+      <div class="grid2">
+        <div class="panel">
+          <h3>Baseline snapshot</h3>
+          <ul class="bullets">
+            <li><strong>Total businesses (Baxter):</strong> 5,447</li>
+            <li><strong>Total employees:</strong> 31,247</li>
+          </ul>
+          <div class="callout">
+            These values should be cited to the specific ESRI layer/table and date of extraction.
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Construction employment (example)</h3>
+          <ul class="bullets">
+            <li>100 direct jobs</li>
+            <li>Multiplier 1.5 → 150 total (direct + indirect + induced)</li>
+            <li>≈ 0.48% of Baxter employment base</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
